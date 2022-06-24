@@ -18,8 +18,9 @@
     import slides from './slides.js';
     import Carousel from './index.js';
 
-    let carousel = new Carousel(slides);
     let containerElement = document.body.querySelector('.container');
+    let carousel = new Carousel(slides);
+    window.carousel = carousel;
 
     containerElement.append(carousel.elem);
   </script>
