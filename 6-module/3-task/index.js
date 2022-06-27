@@ -3,6 +3,7 @@ export default class Carousel {
     this.slides = slides;
     this.container = null;
     this.init();
+    this.initEvents();
   }
 
   get elem() {
@@ -11,7 +12,6 @@ export default class Carousel {
 
   init() {
     this.container = this.createContainer();
-    this.initEvents();
   }
 
   createContainer() {
