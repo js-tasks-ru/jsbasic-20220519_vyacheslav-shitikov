@@ -9,45 +9,83 @@ export default class RibbonMenu {
     this.containerItems = this.elem.querySelector('.ribbon__inner');
     this.arrowSwipeLeft();
     this.arrowSwipeRight();
+    this.containerItems.addEventListener('scroll', () => this.arrowHide());
+    this.initEvent();
   }
 
   createContainer() {
     return createElement(
-      `
-      <div class="container">
-        <div class="ribbon">
-          <button class="ribbon__arrow ribbon__arrow_left ribbon__arrow_visible">
+      `<div class="ribbon">
+          <button class="ribbon__arrow ribbon__arrow_left">
             <img src="/assets/images/icons/angle-icon.svg" alt="icon" />
           </button>
-
+        
           <nav class="ribbon__inner">
-            <a href="#" class="ribbon__item ribbon__item_active" data-id="">All</a>
-            <a href="#" class="ribbon__item" data-id="salads">Salads</a>
-            <a href="#" class="ribbon__item" data-id="soups">Soups</a>
-            <a href="#" class="ribbon__item" data-id="chicken-dishes">Chicken dishes</a>
-            <a href="#" class="ribbon__item" data-id="beef-dishes">Beef dishes</a>
-            <a href="#" class="ribbon__item" data-id="seafood-dishes">Seafood dishes</a>
-            <a href="#" class="ribbon__item" data-id="vegetable-dishes">Vegetable dishes</a>
-            <a href="#" class="ribbon__item" data-id="bits-and-bites">Bits and bites</a>
-            <a href="#" class="ribbon__item" data-id="on-the-side ribbon__item_active">On the side</a>
+            ${this.categories.map(item => {
+              return `<a href="#" class="ribbon__item" data-id="${item.id}">${item.name}</a>`;
+            }).join('')}
           </nav>
 
           <button class="ribbon__arrow ribbon__arrow_right ribbon__arrow_visible">
             <img src="/assets/images/icons/angle-icon.svg" alt="icon" />
           </button>
-        </div>
-      </div>`);
+        </div>`);
   }
 
   arrowSwipeLeft() {
     this.arrowLeft.onclick = () => {
-      return this.containerItems.scrollBy(-350, 0);
+      this.containerItems.scrollBy(-350, 0);
     };
   }
   arrowSwipeRight() {
     this.arrowRight.onclick = () => {
-      return this.containerItems.scrollBy(350, 0);
+      this.containerItems.scrollBy(350, 0);
     };
+  }
+  arrowHide() {
+    let scrollLeftData = this.containerItems.scrollLeft;
+
+    let scrollWidth = this.containerItems.scrollWidth;
+    let scrollLeft = this.containerItems.scrollLeft;
+    let clientWidth = this.containerItems.clientWidth;
+    let scrollRight = scrollWidth - scrollLeft - clientWidth;
+
+    if (scrollLeftData === 0) {
+      this.arrowLeft.classList.remove('ribbon__arrow_visible');
+    } else {
+      this.arrowLeft.classList.add('ribbon__arrow_visible');
+    };
+
+    if (scrollRight < 1) {
+      this.arrowRight.classList.remove('ribbon__arrow_visible');
+    } else {
+      this.arrowRight.classList.add('ribbon__arrow_visible');
+    };
+  }
+
+  initEvent() {
+    let links = this.containerItems.querySelectorAll('.ribbon__item');
+    links.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        btn.preventDefault;
+        links.forEach(link => {
+          if (e.target === link) {
+            link.classList.add('ribbon__item_active');
+          } else {
+            link.classList.remove('ribbon__item_active');
+          }
+        });
+        this.dispatchEvent(e.target.dataset.id);
+      });
+    });
+  }
+  
+  dispatchEvent(categoryId) {
+    const event = new CustomEvent('ribbon-select', {
+      detail: categoryId,
+      bubbles: true
+    });
+    this.elem.dispatchEvent(event);
   }
 
 }
