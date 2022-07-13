@@ -40,12 +40,11 @@ export default class CartIcon {
 
   updatePosition() {
     let initialTopCoord = this.elem.getBoundingClientRect().top + window.pageYOffset;
-    let leftIndent = Math.min(
-      document.querySelector('.container').getBoundingClientRect().right + 20,
-      document.documentElement.clientWidth - this.elem.offsetWidth - 10
-    ) + 'px';
-
     if (window.pageYOffset > initialTopCoord) {
+      let leftIndent = Math.min(
+        document.querySelector('.container').getBoundingClientRect().right + 20,
+        document.documentElement.clientWidth - this.elem.offsetWidth - 10
+      ) + 'px';
       Object.assign(this.elem.style, {
         position: 'fixed',
         top: '50px',
